@@ -34,8 +34,10 @@ gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/Wa
 # --- Install Extensions with gext ---
 echo "[+] Installing recommended GNOME extensions..."
 gext install dash-to-dock@micxgx.gmail.com
+gext install ding@rastersoft.com
 gext install user-theme@gnome-shell-extensions.gcampax.github.com
 gext enable dash-to-dock@micxgx.gmail.com
+gext enable ding@rastersoft.com
 gext enable user-theme@gnome-shell-extensions.gcampax.github.com
 
 # --- Apply Theme & Icons ---
