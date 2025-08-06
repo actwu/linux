@@ -8,6 +8,7 @@ app('LINUXX'); fav(2);
 
 # linux
 
+[Manjaro GNOME](https://download.manjaro.org/gnome/25.0.6/manjaro-gnome-25.0.6-250730-linux612.iso)
 Fav BG [Here](https://github.com/vinceliuice/WhiteSur-wallpapers/blob/main/Wallpaper-nord/WhiteSur-nord-dark.png)
 ---
 ![](https://github.com/vinceliuice/WhiteSur-wallpapers/blob/main/Wallpaper-nord/WhiteSur-nord-dark.png)
