@@ -3,7 +3,7 @@
 set -e
 
 # --- Settings ---
-WALLPAPER_URL="https://github.com/vinceliuice/WhiteSur-wallpapers/blob/main/Wallpaper-nord/WhiteSur-nord-dark.png"
+WALLPAPER_URL="https://github.com/vinceliuice/WhiteSur-wallpapers/raw/main/Wallpaper-nord/WhiteSur-nord-dark.png"
 GTK_THEME_REPO="https://github.com/vinceliuice/WhiteSur-gtk-theme.git"
 ICON_THEME_REPO="https://github.com/vinceliuice/WhiteSur-icon-theme.git"
 OS_NAME="NaiOS"
@@ -11,6 +11,9 @@ OS_NAME="NaiOS"
 # --- Ensure Dependencies ---
 command -v gext >/dev/null || { echo "gext not found. Please run install_gext.sh first."; exit 1; }
 command -v git >/dev/null || { echo "git not found."; exit 1; }
+
+# --- Clean up old clones ---
+rm -rf /tmp/WhiteSur-gtk-theme /tmp/WhiteSur-icon-theme
 
 # --- Theme Installation ---
 echo "[+] Installing WhiteSur GTK theme..."
@@ -34,11 +37,12 @@ gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/Wa
 # --- Install Extensions with gext ---
 echo "[+] Installing recommended GNOME extensions..."
 gext install dash-to-dock@micxgx.gmail.com
-gext install ding@rastersoft.com
 gext install user-theme@gnome-shell-extensions.gcampax.github.com
+gext install ding@rastersoft.com
+
 gext enable dash-to-dock@micxgx.gmail.com
-gext enable ding@rastersoft.com
 gext enable user-theme@gnome-shell-extensions.gcampax.github.com
+gext enable ding@rastersoft.com
 
 # --- Apply Theme & Icons ---
 echo "[+] Applying theme and icons..."
@@ -52,8 +56,8 @@ if [[ $EUID -ne 0 ]]; then
 echo "  [!] Changing OS name requires sudo privileges."
 sudo bash -c "echo 'PRETTY_NAME=\"$OS_NAME\"' > /etc/os-release"
 else
-echo 'PRETTY_NAME="'"$OS_NAME"'"' > /etc/os-release
+echo "PRETTY_NAME=\"$OS_NAME\"" > /etc/os-release
 fi
 
 # --- Done ---
-echo -e "\n🎉 Your GNOME desktop is now transformed into NaiOS (macOS-style)!"
+echo -e "\n🎉 Your GNOME desktop is now transformed into NaiOS (macOS-style) with desktop icons!"
