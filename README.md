@@ -15,14 +15,14 @@ Fav BG [Here](https://github.com/vinceliuice/WhiteSur-wallpapers/blob/main/Wallp
 ---
 
 Make Sure install the TOOLSS
-```
+```sh
 curl -O https://actwu.github.io/linux/install_gext.sh
 chmod +x install_gext.sh
 ./install_gext.sh
 ```
 
 Make it NAI OS
-```
+```sh
 curl -O https://actwu.github.io/linux/naios.sh
 chmod +x naios.sh
 ./naios.sh
