@@ -1,63 +1,125 @@
 #!/bin/bash
-
 set -e
 
+# --- Splash Screen ---
+clear
+echo -e "\e[1;34m
+                      ▄▄                     
+▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
+  ███▄    █              ▄██▀    ▀██▄██    ▀█
+  █ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
+  █  ▀██▄ █ ██   ██   ██ ██        ██ ▀█████▄
+  █   ▀██▄█  ▄█████   ██ ██▄      ▄██     ▀██
+  █     ███ ██   ██   ██ ▀██▄    ▄██▀█     ██
+▄███▄    ██ ▀████▀██▄████▄ ▀▀████▀▀ █▀█████▀ 
+\e[0m"
+
+# --- Ask for sudo once ---
+echo "Nai os installer"
+sudo -v
+
 # --- Settings ---
-WALLPAPER_URL="https://github.com/vinceliuice/WhiteSur-wallpapers/raw/main/Wallpaper-nord/WhiteSur-nord-dark.png"
+WALLPAPER_URL="https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/naios.png"
 GTK_THEME_REPO="https://github.com/vinceliuice/WhiteSur-gtk-theme.git"
 ICON_THEME_REPO="https://github.com/vinceliuice/WhiteSur-icon-theme.git"
 OS_NAME="NaiOS"
 
 # --- Ensure Dependencies ---
-command -v gext >/dev/null || { echo "gext not found. Please run install_gext.sh first."; exit 1; }
-command -v git >/dev/null || { echo "git not found."; exit 1; }
+for cmd in gext git wget; do
+    command -v $cmd >/dev/null || { echo "$cmd not found. Please install it first."; exit 1; }
+done
 
 # --- Clean up old clones ---
 rm -rf /tmp/WhiteSur-gtk-theme /tmp/WhiteSur-icon-theme
 
 # --- Theme Installation ---
-echo "[+] Installing WhiteSur GTK theme..."
-git clone --depth=1 "$GTK_THEME_REPO" /tmp/WhiteSur-gtk-theme
-cd /tmp/WhiteSur-gtk-theme
-./install.sh -n NaiSur -l
-cd ~
+echo "[+] Theming..."
+if [ ! -d "$HOME/.themes/Nai" ]; then
+    git clone --depth=1 "$GTK_THEME_REPO" /tmp/WhiteSur-gtk-theme
+    /tmp/WhiteSur-gtk-theme/install.sh -n Nai -l
+fi
 
-echo "[+] Installing WhiteSur icon theme..."
-git clone --depth=1 "$ICON_THEME_REPO" /tmp/WhiteSur-icon-theme
-cd /tmp/WhiteSur-icon-theme
-./install.sh -a
-cd ~
+echo "[+] Icons..."
+if [ ! -d "$HOME/.icons/Nai" ]; then
+    git clone --depth=1 "$ICON_THEME_REPO" /tmp/WhiteSur-icon-theme
+    /tmp/WhiteSur-icon-theme/install.sh -a
+fi
 
 # --- Set Wallpaper ---
-echo "[+] Setting wallpaper..."
+echo "[+] Just the vibe..."
 mkdir -p ~/Pictures/Wallpapers
-wget -q "$WALLPAPER_URL" -O ~/Pictures/Wallpapers/naimacos.jpg
-gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/Wallpapers/naimacos.jpg"
+wget -q "$WALLPAPER_URL" -O ~/Pictures/Wallpapers/naimacos.png
+gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/Wallpapers/naimacos.png"
 
 # --- Install Extensions with gext ---
 echo "[+] Installing recommended GNOME extensions..."
-gext install dash-to-dock@micxgx.gmail.com
-gext install user-theme@gnome-shell-extensions.gcampax.github.com
-gext install ding@rastersoft.com
+for ext in dash-to-dock@micxgx.gmail.com user-theme@gnome-shell-extensions.gcampax.github.com ding@rastersoft.com; do
+    gext install $ext || true
+    gext enable $ext || true
+done
 
-gext enable dash-to-dock@micxgx.gmail.com
-gext enable user-theme@gnome-shell-extensions.gcampax.github.com
-gext enable ding@rastersoft.com
 
-# --- Apply Theme & Icons ---
-echo "[+] Applying theme and icons..."
-gsettings set org.gnome.desktop.interface gtk-theme "NaiSur"
-gsettings set org.gnome.desktop.wm.preferences theme "NaiSur"
-gsettings set org.gnome.desktop.interface icon-theme "WhiteSur"
+# --- Apply Theme & Icons (Dark) ---
+echo "[+] Applying theme and icons (dark)..."
+gsettings set org.gnome.desktop.interface gtk-theme 'Nai-Dark'
+gsettings set org.gnome.desktop.wm.preferences theme 'Nai-Dark'
+gsettings set org.gnome.desktop.interface icon-theme 'WhiteSur-dark'
+
+
 
 # --- Change OS Name to NaiOS ---
 echo "[+] Setting OS name to NaiOS..."
-if [[ $EUID -ne 0 ]]; then
-echo "  [!] Changing OS name requires sudo privileges."
-sudo bash -c "echo 'PRETTY_NAME=\"$OS_NAME\"' > /etc/os-release"
-else
-echo "PRETTY_NAME=\"$OS_NAME\"" > /etc/os-release
-fi
+sudo bash -c "sed -i '/^PRETTY_NAME=/d' /etc/os-release && echo 'PRETTY_NAME=\"$OS_NAME\"' >> /etc/os-release"
+
+# --- bsh function to safely add to bashrc ---
+bsh() {
+    local identifier="$1"   # Unique string to check in bashrc
+    local content="$2"      # Multiline string to append
+
+    if ! grep -q "$identifier" "$HOME/.bashrc"; then
+        echo -e "\n# Added by NaiOS installer: $identifier" >> "$HOME/.bashrc"
+        echo -e "$content" >> "$HOME/.bashrc"
+    fi
+}
+
+# --- Add NaiOS logo on terminal start ---
+bsh "nai-on_start()" 'nai-on_start() {
+echo -e "\e[1;34m
+                      ▄▄                     
+▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
+  ███▄    █              ▄██▀    ▀██▄██    ▀█
+  █ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
+  █  ▀██▄ █ ██   ██   ██ ██        ██ ▀█████▄
+  █   ▀██▄█  ▄█████   ██ ██▄      ▄██     ▀██
+  █     ███ ██   ██   ██ ▀██▄    ▄██▀█     ██
+▄███▄    ██ ▀████▀██▄████▄ ▀▀████▀▀ █▀█████▀ 
+\e[0m"
+}
+nai-on_start'
+
+bsh "naios-history-alias" 'alias hh="history | less"'
+
+bsh "naios-info" '
+naios_info() {
+echo ""
+echo -e "  \e[1;34mOS:\e[0m $(hostnamectl --static) OS"
+echo -e "  \e[1;34mKernel:\e[0m $(uname -r)"
+echo -e "  \e[1;34mUptime:\e[0m $(uptime -p)"
+echo -e "  \e[1;34mCPU:\e[0m $(lscpu | grep "Model name" | awk -F: "{print \$2}" | xargs)"
+echo -e "  \e[1;34mMemory:\e[0m $(free -h | grep Mem | awk "{print \$3 \"/\" \$2}")"
+echo -e "  \e[1;34mDisk:\e[0m $(df -h / | tail -1 | awk "{print \$3 \"/\" \$2}")"
+echo ""
+}
+
+alias "?"="naios_info"
+'
+bsh "naios-prompt" 'PS1="\[\e[34m\]\h - \[\e[0m\]"'
+bsh "naios-shortcuts" '
+  ,,() { source ~/.bashrc; }
+  ..() { clear && ,,; }
+  xx() { exit; }
+'
+
 
 # --- Done ---
 echo -e "\n🎉 Your GNOME desktop is now transformed into NaiOS (macOS-style) with desktop icons!"
