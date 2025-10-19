@@ -4,58 +4,67 @@ set -e
 # --- Splash Screen ---
 clear
 echo -e "\e[1;34m
-                      ▄▄                     
+    ▄▄                     
 ▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
-  ███▄    █              ▄██▀    ▀██▄██    ▀█
-  █ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
-  █  ▀██▄ █ ██   ██   ██ ██        ██ ▀█████▄
-  █   ▀██▄█  ▄█████   ██ ██▄      ▄██     ▀██
-  █     ███ ██   ██   ██ ▀██▄    ▄██▀█     ██
+███▄    █              ▄██▀    ▀██▄██    ▀█
+█ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
+█  ▀██▄ █ ██   ██   ██ ██        ██ ▀█████▄
+█   ▀██▄█  ▄█████   ██ ██▄      ▄██     ▀██
+█     ███ ██   ██   ██ ▀██▄    ▄██▀█     ██
 ▄███▄    ██ ▀████▀██▄████▄ ▀▀████▀▀ █▀█████▀ 
 \e[0m"
 
-# --- Ask for sudo once ---
+
+echo "[+] Detecting Linux Distribution and Desktop Environment..."
+DISTRO_NAME=$(grep PRETTY_NAME /etc/os-release | cut -d= -f2- | tr -d '"')
+echo "    Distribution: $DISTRO_NAME"
+CURRENT_DE=$(echo "${XDG_CURRENT_DESKTOP:-unknown}")
+echo "    Current Desktop: $CURRENT_DE"
+
 echo "Nai os installer"
 sudo -v
 
-# Check if GNOME is installed
-if ! command -v gnome-shell >/dev/null 2>&1; then
-echo "[+] GNOME not detected, installing GNOME desktop environment..."
-
-# Detect distribution and install GNOME accordingly
-if [ -f /etc/os-release ]; then
-. /etc/os-release
+# Function to install GNOME based on distro
+install_gnome() {
 case "$ID" in
 ubuntu|debian|linuxmint)
-sudo apt update && sudo apt install -y gnome ubuntu-gnome-desktop
+sudo apt update
+sudo apt install -y gnome ubuntu-gnome-desktop gdm3
+sudo dpkg-reconfigure gdm3
 ;;
-centos|rhel|fedora)
-sudo yum -y groups install "GNOME Desktop"
+fedora|centos|rhel)
+sudo dnf groupinstall -y "GNOME Desktop"
+sudo systemctl enable gdm.service
 ;;
 arch|manjaro)
-sudo pacman -Syu --noconfirm gnome gnome-extra
+sudo pacman -Syu --noconfirm gnome gnome-extra gdm
+sudo systemctl enable gdm.service
 ;;
 *)
-echo " unsupported distro $ID. Please install GNOME manually."
+echo "Unsupported distro $ID. Please install GNOME manually."
 exit 1
 ;;
 esac
+# Set graphical target
+sudo systemctl set-default graphical.target
+}
+
+# Check if GNOME is installed by checking gnome-shell presence
+if ! command -v gnome-shell >/dev/null 2>&1; then
+echo "[+] GNOME not detected, installing GNOME desktop environment..."
+if [ -f /etc/os-release ]; then
+. /etc/os-release
+install_gnome
+echo "[+] GNOME installed successfully."
+echo "Please reboot the system and re-run this script after logging into GNOME session."
+exit 0
 else
 echo "Cannot detect Linux distribution. Install GNOME manually."
 exit 1
 fi
-
-# Optionally set graphical target for systemd systems
-if command -v systemctl >/dev/null 2>&1; then
-sudo systemctl set-default graphical.target
-fi
-
-echo "[+] GNOME installed. Please log out and back in or reboot before continuing."
-exit 0
 else
-echo "[+] GNOME is installed, continuing setup."
+echo "[+] GNOME is installed, continuing setup..."
 fi
-
 
 # --- Settings ---
 WALLPAPER_URL="https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/naios.png"
@@ -97,13 +106,13 @@ fi
 # --- Add NaiOS logo on terminal start ---
 bsh "nai-on_start()" 'nai-on_start() {
 echo -e "\e[1;34m
-                      ▄▄                     
+    ▄▄                     
 ▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
-  ███▄    █              ▄██▀    ▀██▄██    ▀█
-  █ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
-  █  ▀██▄ █ ██   ██   ██ ██        ██ ▀█████▄
-  █   ▀██▄█  ▄█████   ██ ██▄      ▄██     ▀██
-  █     ███ ██   ██   ██ ▀██▄    ▄██▀█     ██
+███▄    █              ▄██▀    ▀██▄██    ▀█
+█ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
+█  ▀██▄ █ ██   ██   ██ ██        ██ ▀█████▄
+█   ▀██▄█  ▄█████   ██ ██▄      ▄██     ▀██
+█     ███ ██   ██   ██ ▀██▄    ▄██▀█     ██
 ▄███▄    ██ ▀████▀██▄████▄ ▀▀████▀▀ █▀█████▀ 
 \e[0m"
 }
