@@ -76,38 +76,8 @@ gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/Wa
 gsettings set org.gnome.desktop.background picture-uri-dark "file://$HOME/Pictures/Wallpapers/naimacos.png"
 
 
-# --- Clean up old clones ---
-rm -rf /tmp/WhiteSur-gtk-theme /tmp/WhiteSur-icon-theme
-
-# --- Theme Installation ---
-echo "[+] Theming..."
-if [ ! -d "$HOME/.themes/Nai" ]; then
-git clone --depth=1 "$GTK_THEME_REPO" /tmp/WhiteSur-gtk-theme
-/tmp/WhiteSur-gtk-theme/install.sh -n Nai -l
-fi
-
-echo "[+] Icons..."
-if [ ! -d "$HOME/.icons/Nai" ]; then
-git clone --depth=1 "$ICON_THEME_REPO" /tmp/WhiteSur-icon-theme
-/tmp/WhiteSur-icon-theme/install.sh -a
-fi
-
-
-# --- Install Extensions with gext ---
-echo "[+] Installing recommended GNOME extensions..."
-for ext in dash-to-dock@micxgx.gmail.com user-theme@gnome-shell-extensions.gcampax.github.com ding@rastersoft.com; do
-gext install $ext || true
-gext enable $ext || true
-done
-
-
-# --- Apply Theme & Icons (Dark) ---
-echo "[+] Applying theme and icons (dark)..." 
-gsettings set org.gnome.desktop.interface gtk-theme 'Nai-Dark'
-gsettings set org.gnome.desktop.wm.preferences theme 'Nai-Dark'
-gsettings set org.gnome.desktop.interface icon-theme 'WhiteSur-dark'
-
-
+echo "[+] Aligning..."
+gsettings set org.gnome.desktop.wm.preferences button-layout "close,minimize,maximize:"
 
 # --- Change OS Name to NaiOS ---
 echo "[+] Setting OS name to NaiOS..."
@@ -161,6 +131,39 @@ bsh "naios-shortcuts" '
 ..() { clear && ,,; }
 xx() { exit; }
 '
+
+
+# --- Clean up old clones ---
+rm -rf /tmp/WhiteSur-gtk-theme /tmp/WhiteSur-icon-theme
+
+# --- Theme Installation ---
+echo "[+] Theming..."
+if [ ! -d "$HOME/.themes/Nai" ]; then
+git clone --depth=1 "$GTK_THEME_REPO" /tmp/WhiteSur-gtk-theme
+/tmp/WhiteSur-gtk-theme/install.sh -n Nai -l
+fi
+
+echo "[+] Icons..."
+if [ ! -d "$HOME/.icons/Nai" ]; then
+git clone --depth=1 "$ICON_THEME_REPO" /tmp/WhiteSur-icon-theme
+/tmp/WhiteSur-icon-theme/install.sh -a
+fi
+
+
+# --- Install Extensions with gext ---
+echo "[+] Installing recommended GNOME extensions..."
+for ext in dash-to-dock@micxgx.gmail.com user-theme@gnome-shell-extensions.gcampax.github.com ding@rastersoft.com; do
+gext install $ext || true
+gext enable $ext || true
+done
+
+
+# --- Apply Theme & Icons (Dark) ---
+echo "[+] Applying theme and icons (dark)..." 
+gsettings set org.gnome.desktop.interface gtk-theme 'Nai-Dark'
+gsettings set org.gnome.desktop.wm.preferences theme 'Nai-Dark'
+gsettings set org.gnome.desktop.interface icon-theme 'WhiteSur-dark'
+
 
 
 # --- Done ---
