@@ -29,6 +29,14 @@ for cmd in gext git wget; do
     command -v $cmd >/dev/null || { echo "$cmd not found. Please install it first."; exit 1; }
 done
 
+# --- Set Wallpaper ---
+echo "[+] Just the vibe..."
+mkdir -p ~/Pictures/Wallpapers
+wget -q "$WALLPAPER_URL" -O ~/Pictures/Wallpapers/naimacos.png
+gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/Wallpapers/naimacos.png"
+gsettings set org.gnome.desktop.background picture-uri-dark "file://$HOME/Pictures/Wallpapers/naimacos.png"
+
+
 # --- Clean up old clones ---
 rm -rf /tmp/WhiteSur-gtk-theme /tmp/WhiteSur-icon-theme
 
@@ -45,12 +53,6 @@ if [ ! -d "$HOME/.icons/Nai" ]; then
     /tmp/WhiteSur-icon-theme/install.sh -a
 fi
 
-# --- Set Wallpaper ---
-echo "[+] Just the vibe..."
-mkdir -p ~/Pictures/Wallpapers
-wget -q "$WALLPAPER_URL" -O ~/Pictures/Wallpapers/naimacos.png
-gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/Wallpapers/naimacos.png"
-gsettings set org.gnome.desktop.background picture-uri-dark "file://$HOME/Pictures/Wallpapers/naimacos.png"
 
 # --- Install Extensions with gext ---
 echo "[+] Installing recommended GNOME extensions..."
@@ -61,7 +63,7 @@ done
 
 
 # --- Apply Theme & Icons (Dark) ---
-echo "[+] Applying theme and icons (dark)..."
+echo "[+] Applying theme and icons (dark)..." 
 gsettings set org.gnome.desktop.interface gtk-theme 'Nai-Dark'
 gsettings set org.gnome.desktop.wm.preferences theme 'Nai-Dark'
 gsettings set org.gnome.desktop.interface icon-theme 'WhiteSur-dark'
