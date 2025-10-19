@@ -106,7 +106,7 @@ fi
 # --- Add NaiOS logo on terminal start ---
 bsh "nai-on_start()" 'nai-on_start() {
 echo -e "\e[1;34m
-                      ▄▄                     
+                          ▄▄                     
     ▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
       ███▄    █              ▄██▀    ▀██▄██    ▀█
       █ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
