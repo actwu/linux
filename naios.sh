@@ -50,6 +50,7 @@ echo "[+] Just the vibe..."
 mkdir -p ~/Pictures/Wallpapers
 wget -q "$WALLPAPER_URL" -O ~/Pictures/Wallpapers/naimacos.png
 gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/Wallpapers/naimacos.png"
+gsettings set org.gnome.desktop.background picture-uri-dark "file://$HOME/Pictures/Wallpapers/naimacos.png"
 
 # --- Install Extensions with gext ---
 echo "[+] Installing recommended GNOME extensions..."
