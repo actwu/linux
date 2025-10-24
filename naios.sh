@@ -66,6 +66,59 @@ else
 echo "[+] GNOME is installed, continuing setup..."
 fi
 
+# Detect available package manager
+if command -v apt >/dev/null 2>&1; then
+PKG_INSTALL="sudo apt install -y"
+elif command -v dnf >/dev/null 2>&1; then
+PKG_INSTALL="sudo dnf install -y"
+elif command -v pamac >/dev/null 2>&1; then
+PKG_INSTALL="sudo pamac install -y"
+elif command -v yay >/dev/null 2>&1; then
+PKG_INSTALL="yay -S --noconfirm"
+elif command -v pacman >/dev/null 2>&1; then
+PKG_INSTALL="sudo pacman -Syu --noconfirm"
+elif command -v zypper >/dev/null 2>&1; then
+PKG_INSTALL="sudo zypper install -y"
+else
+echo "[!] No supported package manager detected."
+echo "Please install Python3 and pip manually before continuing."
+exit 1
+fi
+
+# Make sure Python and pip exist
+if ! command -v python >/dev/null 2>&1; then
+$PKG_INSTALL python python-pip python-venv || $PKG_INSTALL python python-pip
+fi
+
+# Check for pip module
+if ! command -v pip >/dev/null 2>&1; then
+$PKG_INSTALL python-pip || curl -sS https://bootstrap.pypa.io/get-pip.py | python
+fi
+
+# --- Virtual environment for gext ---
+GEXT_ENV="$HOME/.naios_env"
+if [ ! -d "$GEXT_ENV" ]; then
+python3 -m venv "$GEXT_ENV"
+fi
+
+# Activate environment
+source "$GEXT_ENV/bin/activate"
+
+# Install gext if not already installed
+if ! python3 -m pip show gnome-extensions-cli >/dev/null 2>&1; then
+echo "[+] Installing GEXT (gnome-extensions-cli)..."
+python3 -m pip install --upgrade pip wheel
+python3 -m pip install gnome-extensions-cli
+fi
+
+# Ensure gext command is linked
+if ! command -v gext >/dev/null 2>&1; then
+echo "[+] Linking gext binary..."
+mkdir -p "$HOME/.local/bin"
+ln -sf "$GEXT_ENV/bin/gext" "$HOME/.local/bin/gext"
+export PATH="$HOME/.local/bin:$PATH"
+fi
+
 # --- Settings ---
 WALLPAPER_URL="https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/naios.png"
 GTK_THEME_REPO="https://github.com/vinceliuice/WhiteSur-gtk-theme.git"
@@ -172,58 +225,7 @@ gsettings set org.gnome.desktop.interface icon-theme "$ICON_NAME"
 fi
 
 
-# Detect available package manager
-if command -v apt >/dev/null 2>&1; then
-PKG_INSTALL="sudo apt install -y"
-elif command -v dnf >/dev/null 2>&1; then
-PKG_INSTALL="sudo dnf install -y"
-elif command -v pamac >/dev/null 2>&1; then
-PKG_INSTALL="sudo pamac install -y"
-elif command -v yay >/dev/null 2>&1; then
-PKG_INSTALL="yay -S --noconfirm"
-elif command -v pacman >/dev/null 2>&1; then
-PKG_INSTALL="sudo pacman -Syu --noconfirm"
-elif command -v zypper >/dev/null 2>&1; then
-PKG_INSTALL="sudo zypper install -y"
-else
-echo "[!] No supported package manager detected."
-echo "Please install Python3 and pip manually before continuing."
-exit 1
-fi
 
-# Make sure Python and pip exist
-if ! command -v python3 >/dev/null 2>&1; then
-$PKG_INSTALL python3 python3-pip python3-venv || $PKG_INSTALL python python-pip
-fi
-
-# Check for pip module
-if ! command -v pip3 >/dev/null 2>&1; then
-$PKG_INSTALL python3-pip || curl -sS https://bootstrap.pypa.io/get-pip.py | python3
-fi
-
-# --- Virtual environment for gext ---
-GEXT_ENV="$HOME/.naios_env"
-if [ ! -d "$GEXT_ENV" ]; then
-python3 -m venv "$GEXT_ENV"
-fi
-
-# Activate environment
-source "$GEXT_ENV/bin/activate"
-
-# Install gext if not already installed
-if ! python3 -m pip show gnome-extensions-cli >/dev/null 2>&1; then
-echo "[+] Installing GEXT (gnome-extensions-cli)..."
-python3 -m pip install --upgrade pip wheel
-python3 -m pip install gnome-extensions-cli
-fi
-
-# Ensure gext command is linked
-if ! command -v gext >/dev/null 2>&1; then
-echo "[+] Linking gext binary..."
-mkdir -p "$HOME/.local/bin"
-ln -sf "$GEXT_ENV/bin/gext" "$HOME/.local/bin/gext"
-export PATH="$HOME/.local/bin:$PATH"
-fi
 
 echo "[+] Designing..."
 for ext in dash-to-dock@micxgx.gmail.com user-theme@gnome-shell-extensions.gcampax.github.com ding@rastersoft.com; do
@@ -233,6 +235,9 @@ gext enable "$ext" || true
 done
 
 deactivate
+
+source ~/.bashrc;
+source ~/.bashrc;
 
 if command -v pamac >/dev/null 2>&1; then PM_INSTALL="pamac install --no-confirm"
 elif command -v pacman >/dev/null 2>&1; then PM_INSTALL="sudo pacman -S --noconfirm"
