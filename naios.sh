@@ -239,7 +239,7 @@ deactivate
 source ~/.bashrc;
 source ~/.bashrc;
 
-if command -v pacmac >/dev/null 2>&1; then PM_INSTALL="sudo pacman -Syu --no-confirm"
+if command -v pacmac >/dev/null 2>&1; then PM_INSTALL="sudo pacman -Syu "
 elif command -v apt >/dev/null 2>&1; then PM_INSTALL="sudo apt install -y"
 elif command -v dnf >/dev/null 2>&1; then PM_INSTALL="sudo dnf install -y"
 elif command -v zypper >/dev/null 2>&1; then PM_INSTALL="sudo zypper install -y"
