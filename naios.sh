@@ -239,15 +239,14 @@ deactivate
 source ~/.bashrc;
 source ~/.bashrc;
 
-if command -v pamac >/dev/null 2>&1; then PM_INSTALL="pamac install --no-confirm"
-elif command -v pacman >/dev/null 2>&1; then PM_INSTALL="sudo pacman -S --noconfirm"
+if command -v pacmac >/dev/null 2>&1; then PM_INSTALL="sudo pacman -Syu --no-confirm"
 elif command -v apt >/dev/null 2>&1; then PM_INSTALL="sudo apt install -y"
 elif command -v dnf >/dev/null 2>&1; then PM_INSTALL="sudo dnf install -y"
 elif command -v zypper >/dev/null 2>&1; then PM_INSTALL="sudo zypper install -y"
 elif command -v emerge >/dev/null 2>&1; then PM_INSTALL="sudo emerge"
 elif command -v xbps-install >/dev/null 2>&1; then PM_INSTALL="sudo xbps-install -Sy"
 else exit 1; fi
-command -v kgx >/dev/null 2>&1 || $PM_INSTALL kgx || exit 1
+command -v gnome-console >/dev/null 2>&1 || $PM_INSTALL gnome-console || exit 1
 kgx -- bash -c 'echo -e "\e[34m █   █ ██▀ █   ▄▀▀ ▄▀▄ █▄ ▄█ ██▀
  ▀▄▀▄▀ █▄▄ █▄▄ ▀▄▄ ▀▄▀ █ ▀ █ █▄▄
  ▀█▀ ▄▀▄
