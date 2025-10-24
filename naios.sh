@@ -245,7 +245,7 @@ elif command -v dnf >/dev/null 2>&1; then PM_INSTALL="sudo dnf install -y"
 elif command -v zypper >/dev/null 2>&1; then PM_INSTALL="sudo zypper install -y"
 elif command -v emerge >/dev/null 2>&1; then PM_INSTALL="sudo emerge"
 elif command -v xbps-install >/dev/null 2>&1; then PM_INSTALL="sudo xbps-install -Sy"
-else exit 1; fi
+fi
 command -v gnome-console >/dev/null 2>&1 || $PM_INSTALL gnome-console || exit 1
 kgx -- bash -c 'echo -e "\e[34m █   █ ██▀ █   ▄▀▀ ▄▀▄ █▄ ▄█ ██▀
  ▀▄▀▄▀ █▄▄ █▄▄ ▀▄▄ ▀▄▀ █ ▀ █ █▄▄
