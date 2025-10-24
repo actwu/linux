@@ -4,14 +4,14 @@ set -e
 # --- Splash Screen ---
 clear
 echo -e "\e[1;34m
-                          ▄▄                     
-    ▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
-      ███▄    █              ▄██▀    ▀██▄██    ▀█
-      █ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
-      █  ▀██▄ █ ██   ██   ██ ██        ██ ▀█████▄
-      █   ▀██▄█  ▄█████   ██ ██▄      ▄██     ▀██
-      █     ███ ██   ██   ██ ▀██▄    ▄██▀█     ██
-    ▄███▄    ██ ▀████▀██▄████▄ ▀▀████▀▀ █▀█████▀ 
+                    ▄▄                     
+▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
+███▄    █              ▄██▀    ▀██▄██    ▀█
+█ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
+█  ▀██▄ █ ██   ██   ██ ██        ██ ▀█████▄
+█   ▀██▄█  ▄█████   ██ ██▄      ▄██     ▀██
+█     ███ ██   ██   ██ ▀██▄    ▄██▀█     ██
+▄███▄    ██ ▀████▀██▄████▄ ▀▀████▀▀ █▀█████▀ 
 \e[0m"
 
 
@@ -106,14 +106,14 @@ fi
 # --- Add NaiOS logo on terminal start ---
 bsh "nai-on_start()" 'nai-on_start() {
 echo -e "\e[1;34m
-                          ▄▄                     
-    ▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
-      ███▄    █              ▄██▀    ▀██▄██    ▀█
-      █ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
-      █  ▀██▄ █ ██   ██   ██ ██        ██ ▀█████▄
-      █   ▀██▄█  ▄█████   ██ ██▄      ▄██     ▀██
-      █     ███ ██   ██   ██ ▀██▄    ▄██▀█     ██
-    ▄███▄    ██ ▀████▀██▄████▄ ▀▀████▀▀ █▀█████▀ 
+                    ▄▄                     
+▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
+███▄    █              ▄██▀    ▀██▄██    ▀█
+█ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
+█  ▀██▄ █ ██   ██   ██ ██        ██ ▀█████▄
+█   ▀██▄█  ▄█████   ██ ██▄      ▄██     ▀██
+█     ███ ██   ██   ██ ▀██▄    ▄██▀█     ██
+▄███▄    ██ ▀████▀██▄████▄ ▀▀████▀▀ █▀█████▀ 
 \e[0m"
 }
 nai-on_start'
@@ -141,39 +141,109 @@ bsh "naios-shortcuts" '
 xx() { exit; }
 '
 
-
-# --- Clean up old clones ---
-rm -rf /tmp/WhiteSur-gtk-theme /tmp/WhiteSur-icon-theme
-
-# --- Theme Installation ---
 echo "[+] Theming..."
-if [ ! -d "$HOME/.themes/Nai" ]; then
-git clone --depth=1 "$GTK_THEME_REPO" /tmp/WhiteSur-gtk-theme
-/tmp/WhiteSur-gtk-theme/install.sh -n Nai -l
+rm -rf /tmp/Nai-Icons /tmp/Nai-solid /tmp/Nai-Icons.zip /tmp/Nai-solid.zip
+
+THEME_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/Nai-Icons.zip"
+ICON_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/Nai-solid.zip"
+
+THEME_DIR="$HOME/.themes"
+ICON_DIR="$HOME/.local/share/icons"
+
+mkdir -p "$THEME_DIR" "$ICON_DIR"
+
+wget -q "$THEME_URL" -O /tmp/Nai-Icons.zip
+unzip -o /tmp/Nai-Icons.zip -d "$THEME_DIR"
+
+wget -q "$ICON_URL" -O /tmp/Nai-solid.zip
+unzip -o /tmp/Nai-solid.zip -d "$ICON_DIR"
+
+echo "[+] Theming..."
+THEME_NAME=$(basename "$(find "$THEME_DIR" -maxdepth 1 -type d -name "Nai*" | head -n 1)")
+ICON_NAME=$(basename "$(find "$ICON_DIR" -maxdepth 1 -type d -name "Nai*" | head -n 1)")
+
+if [ -n "$THEME_NAME" ]; then
+gsettings set org.gnome.desktop.interface gtk-theme "$THEME_NAME"
+gsettings set org.gnome.desktop.wm.preferences theme "$THEME_NAME"
 fi
 
-echo "[+] Icons..."
-if [ ! -d "$HOME/.icons/Nai" ]; then
-git clone --depth=1 "$ICON_THEME_REPO" /tmp/WhiteSur-icon-theme
-/tmp/WhiteSur-icon-theme/install.sh -a
+if [ -n "$ICON_NAME" ]; then
+gsettings set org.gnome.desktop.interface icon-theme "$ICON_NAME"
 fi
 
 
-# --- Install Extensions with gext ---
-echo "[+] Installing recommended GNOME extensions..."
+# Detect available package manager
+if command -v apt >/dev/null 2>&1; then
+PKG_INSTALL="sudo apt install -y"
+elif command -v dnf >/dev/null 2>&1; then
+PKG_INSTALL="sudo dnf install -y"
+elif command -v pamac >/dev/null 2>&1; then
+PKG_INSTALL="sudo pamac install -y"
+elif command -v yay >/dev/null 2>&1; then
+PKG_INSTALL="yay -S --noconfirm"
+elif command -v pacman >/dev/null 2>&1; then
+PKG_INSTALL="sudo pacman -Syu --noconfirm"
+elif command -v zypper >/dev/null 2>&1; then
+PKG_INSTALL="sudo zypper install -y"
+else
+echo "[!] No supported package manager detected."
+echo "Please install Python3 and pip manually before continuing."
+exit 1
+fi
+
+# Make sure Python and pip exist
+if ! command -v python3 >/dev/null 2>&1; then
+$PKG_INSTALL python3 python3-pip python3-venv || $PKG_INSTALL python python-pip
+fi
+
+# Check for pip module
+if ! command -v pip3 >/dev/null 2>&1; then
+$PKG_INSTALL python3-pip || curl -sS https://bootstrap.pypa.io/get-pip.py | python3
+fi
+
+# --- Virtual environment for gext ---
+GEXT_ENV="$HOME/.naios_env"
+if [ ! -d "$GEXT_ENV" ]; then
+python3 -m venv "$GEXT_ENV"
+fi
+
+# Activate environment
+source "$GEXT_ENV/bin/activate"
+
+# Install gext if not already installed
+if ! python3 -m pip show gnome-extensions-cli >/dev/null 2>&1; then
+echo "[+] Installing GEXT (gnome-extensions-cli)..."
+python3 -m pip install --upgrade pip wheel
+python3 -m pip install gnome-extensions-cli
+fi
+
+# Ensure gext command is linked
+if ! command -v gext >/dev/null 2>&1; then
+echo "[+] Linking gext binary..."
+mkdir -p "$HOME/.local/bin"
+ln -sf "$GEXT_ENV/bin/gext" "$HOME/.local/bin/gext"
+export PATH="$HOME/.local/bin:$PATH"
+fi
+
+echo "[+] Designing..."
 for ext in dash-to-dock@micxgx.gmail.com user-theme@gnome-shell-extensions.gcampax.github.com ding@rastersoft.com; do
-gext install $ext || true
-gext enable $ext || true
+echo "[+] Installing extension: $ext"
+gext install "$ext" || true
+gext enable "$ext" || true
 done
 
+deactivate
 
-# --- Apply Theme & Icons (Dark) ---
-echo "[+] Applying theme and icons (dark)..." 
-gsettings set org.gnome.desktop.interface gtk-theme 'Nai-Dark'
-gsettings set org.gnome.desktop.wm.preferences theme 'Nai-Dark'
-gsettings set org.gnome.desktop.interface icon-theme 'WhiteSur-dark'
-
-
-
-# --- Done ---
-echo -e "\n🎉 Your GNOME desktop is now transformed into NaiOS (macOS-style) with desktop icons!"
+if command -v pamac >/dev/null 2>&1; then PM_INSTALL="pamac install --no-confirm"
+elif command -v pacman >/dev/null 2>&1; then PM_INSTALL="sudo pacman -S --noconfirm"
+elif command -v apt >/dev/null 2>&1; then PM_INSTALL="sudo apt install -y"
+elif command -v dnf >/dev/null 2>&1; then PM_INSTALL="sudo dnf install -y"
+elif command -v zypper >/dev/null 2>&1; then PM_INSTALL="sudo zypper install -y"
+elif command -v emerge >/dev/null 2>&1; then PM_INSTALL="sudo emerge"
+elif command -v xbps-install >/dev/null 2>&1; then PM_INSTALL="sudo xbps-install -Sy"
+else exit 1; fi
+command -v kgx >/dev/null 2>&1 || $PM_INSTALL kgx || exit 1
+kgx -- bash -c 'echo -e "\e[34m █   █ ██▀ █   ▄▀▀ ▄▀▄ █▄ ▄█ ██▀
+ ▀▄▀▄▀ █▄▄ █▄▄ ▀▄▄ ▀▄▀ █ ▀ █ █▄▄
+ ▀█▀ ▄▀▄
+  █  ▀▄▀\e[0m"; exec bash' &
