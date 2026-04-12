@@ -24,12 +24,12 @@ curl -O https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/naios.sh
 chmod +x naios.sh
 ./naios.sh
 ```
-<img width="1920" height="1080" alt="Screenshot From 2025-10-19 21-50-36" src="https://github.com/user-attachments/assets/6cb6a2e5-0373-4946-8ae7-a3423893c0bf" />
+<img width="1920" height="1080" alt="Screenshot From 2025-10-19 21-50-36" src="https://github.com/actwu/linux/blob/WEBOPL/demo.png?raw=true" />
 
 
 [Manjaro GNOME](https://download.manjaro.org/gnome/25.0.6/manjaro-gnome-25.0.6-250730-linux612.iso)
 
 
-NaiOs Bg [Here](https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/naios.png)
+NaiOs Bg [Here](https://raw.githubusercontent.com/actwu/linux/refs/heads/WEhttps://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/nay%20bg.jpg)
 ---
-![](https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/naios.png)
+![](https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/nay%20bg.jpg)
