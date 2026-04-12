@@ -120,7 +120,7 @@ export PATH="$HOME/.local/bin:$PATH"
 fi
 
 # --- Settings ---
-WALLPAPER_URL="https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/naios.png"
+WALLPAPER_URL="https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/nay%20bg.jpg"
 GTK_THEME_REPO="https://github.com/vinceliuice/WhiteSur-gtk-theme.git"
 ICON_THEME_REPO="https://github.com/vinceliuice/WhiteSur-icon-theme.git"
 OS_NAME="NaiOS"
@@ -197,8 +197,8 @@ xx() { exit; }
 echo "[+] Theming..."
 rm -rf /tmp/Nai-Icons /tmp/Nai-solid /tmp/Nai-Icons.zip /tmp/Nai-solid.zip
 
-THEME_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/Nai-Icons.zip"
-ICON_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/Nai-solid.zip"
+THEME_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/Nai-solid.zip"
+ICON_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/Nai-Icons.zip"
 
 THEME_DIR="$HOME/.themes"
 ICON_DIR="$HOME/.local/share/icons"
@@ -222,6 +222,9 @@ fi
 
 if [ -n "$ICON_NAME" ]; then
 gsettings set org.gnome.desktop.interface icon-theme "$ICON_NAME"
+
+# ✅ Refresh icon cache (important)
+gtk-update-icon-cache "$ICON_DIR"/* 2>/dev/null
 fi
 
 
