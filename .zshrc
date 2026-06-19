@@ -65,6 +65,10 @@ naios_info
 alias hh="history | less"
 alias "?"="naios_info"
 
+mm() {
+  flatpak run com.visualstudio.code -n --new-window "$@"
+}
+
 ,,() { source ~/.zshrc; }
 ..() { clear && source ~/.zshrc; }
 xx() { exit; }
