@@ -1,0 +1,69 @@
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# Use powerline
+USE_POWERLINE="true"
+# Has weird character width
+# Example:
+#    is not a diamond
+HAS_WIDECHARS="false"
+# Source manjaro-zsh-configuration
+if [[ -e /usr/share/zsh/manjaro-zsh-config ]]; then
+  source /usr/share/zsh/manjaro-zsh-config
+fi
+# Use manjaro zsh prompt
+if [[ -e /usr/share/zsh/manjaro-zsh-prompt ]]; then
+  source /usr/share/zsh/manjaro-zsh-prompt
+fi
+
+# Zsh Core Options (Replaces Bash shopt settings)
+setopt AUTO_CD
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+
+# Case-insensitive tab completion for Zsh
+autoload -Uz compinit && compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+# Color Configuration
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+
+# Prompt Layout (Zsh Style)
+PROMPT="%F{blue}%m - %f"
+
+# System Information Function
+naios_info() {
+    echo ""
+    echo -e "  \e[1;34mOS:\e[0m $(hostnamectl --static 2>/dev/null || echo "Manjaro Linux")"
+    echo -e "  \e[1;34mKernel:\e[0m $(uname -r)"
+    echo -e "  \e[1;34mUptime:\e[0m $(uptime -p)"
+    echo -e "  \e[1;34mMemory:\e[0m $(free -h | grep Mem | awk '{print $3 "/" $2}')"
+    echo -e "  \e[1;34mDisk:\e[0m $(df -h / | tail -1 | awk '{print $3 "/" $2}')"
+    echo ""
+}
+
+# Startup Greeting
+echo -e "\e[1;34m
+                    ▄▄                     
+▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
+███▄    █               ▄██▀   ▀██▄██    ▀█
+█ ███   █  ▄█▀██▄ ▀███ ██▀       ▀█████▄   
+█  ▀██▄ █ ██   ██   ██ ██         ██ ▀█████▄
+█   ▀██▄█  ▄█████   ██ ██▄       ▄██     ▀██
+█     ███ ██   ██   ██ ▀██▄     ▄██▀█     ██
+▄███▄    ██ ▀████▀██▄████▄ ▀▀████▀▀ █▀█████▀ 
+\e[0m"
+
+# Load info on startup
+naios_info
+
+# Shortcuts & Aliases
+alias hh="history | less"
+alias "?"="naios_info"
+
+,,() { source ~/.zshrc; }
+..() { clear && source ~/.zshrc; }
+xx() { exit; }
