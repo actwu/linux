@@ -123,7 +123,7 @@ export PATH="$HOME/.local/bin:$PATH"
 fi
 
 # --- Settings ---
-WALLPAPER_URL="https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/nay%20bg.jpg"
+WALLPAPER_URL="https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/bg.png"
 GTK_THEME_REPO="https://github.com/vinceliuice/WhiteSur-gtk-theme.git"
 ICON_THEME_REPO="https://github.com/vinceliuice/WhiteSur-icon-theme.git"
 OS_NAME="yanOS"
