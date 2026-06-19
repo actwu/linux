@@ -4,14 +4,17 @@ set -e
 # --- Splash Screen ---
 clear
 echo -e "\e[1;34m
-                    ▄▄                     
-▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
-███▄    █              ▄██▀    ▀██▄██    ▀█
-█ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
-█  ▀██▄ █ ██   ██   ██ ██        ██ ▀█████▄
-█   ▀██▄█  ▄█████   ██ ██▄      ▄██     ▀██
-█     ███ ██   ██   ██ ▀██▄    ▄██▀█     ██
-▄███▄    ██ ▀████▀██▄████▄ ▀▀████▀▀ █▀█████▀ 
+                                                 
+                               ▄▄█▀▀██▄  ▄█▀▀▀█▄█
+                             ▄██▀    ▀██▄██    ▀█
+▀██▀   ▀██▀▄█▀██▄ ▀████████▄ ██▀      ▀█████▄    
+  ██   ▄█ ██   ██   ██    ██ ██        ██ ▀█████▄
+   ██ ▄█   ▄█████   ██    ██ ██▄      ▄██     ▀██
+    ███   ██   ██   ██    ██ ▀██▄    ▄██▀█     ██
+    ▄█    ▀████▀██▄████  ████▄ ▀▀████▀▀ █▀█████▀ 
+  ▄█                                             
+██▀                                              
+
 \e[0m"
 
 
@@ -21,7 +24,7 @@ echo "    Distribution: $DISTRO_NAME"
 CURRENT_DE=$(echo "${XDG_CURRENT_DESKTOP:-unknown}")
 echo "    Current Desktop: $CURRENT_DE"
 
-echo "Nai os installer"
+echo "yan os installer"
 sudo -v
 
 # Function to install GNOME based on distro
@@ -96,7 +99,7 @@ $PKG_INSTALL python-pip || curl -sS https://bootstrap.pypa.io/get-pip.py | pytho
 fi
 
 # --- Virtual environment for gext ---
-GEXT_ENV="$HOME/.naios_env"
+GEXT_ENV="$HOME/.yanos_env"
 if [ ! -d "$GEXT_ENV" ]; then
 python3 -m venv "$GEXT_ENV"
 fi
@@ -123,7 +126,7 @@ fi
 WALLPAPER_URL="https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/nay%20bg.jpg"
 GTK_THEME_REPO="https://github.com/vinceliuice/WhiteSur-gtk-theme.git"
 ICON_THEME_REPO="https://github.com/vinceliuice/WhiteSur-icon-theme.git"
-OS_NAME="NaiOS"
+OS_NAME="yanOS"
 
 # --- Ensure Dependencies ---
 for cmd in gext git wget; do
@@ -133,41 +136,41 @@ done
 # --- Set Wallpaper ---
 echo "[+] Just the vibe..."
 mkdir -p ~/Pictures/Wallpapers
-wget -q "$WALLPAPER_URL" -O ~/Pictures/Wallpapers/naimacos.png
-gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/Wallpapers/naimacos.png"
-gsettings set org.gnome.desktop.background picture-uri-dark "file://$HOME/Pictures/Wallpapers/naimacos.png"
+wget -q "$WALLPAPER_URL" -O ~/Pictures/Wallpapers/yanmacos.png
+gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/Wallpapers/yanmacos.png"
+gsettings set org.gnome.desktop.background picture-uri-dark "file://$HOME/Pictures/Wallpapers/yanmacos.png"
 
 
 echo "[+] Aligning..."
 gsettings set org.gnome.desktop.wm.preferences button-layout "close,minimize,maximize:"
 
-# --- Change OS Name to NaiOS ---
-echo "[+] Setting OS name to NaiOS..."
+# --- Change OS Name to yanOS ---
+echo "[+] Setting OS name to yanOS..."
 sudo bash -c "sed -i '/^PRETTY_NAME=/d' /etc/os-release && echo 'PRETTY_NAME=\"$OS_NAME\"' >> /etc/os-release"
 
 curl -fL https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/.bashrc -o ~/.bashrc
 curl -fL https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/.zshrc -o ~/.zshrc
 
 echo "[+] Theming..."
-rm -rf /tmp/Nai-Icons /tmp/Nai-solid /tmp/Nai-Icons.zip /tmp/Nai-solid.zip
+rm -rf /tmp/yan-Icons /tmp/yan-solid /tmp/yan-Icons.zip /tmp/yan-solid.zip
 
-THEME_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/Nai-solid.zip"
-ICON_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/Nai-Icons.zip"
+THEME_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/yan-solid.zip"
+ICON_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/yan-Icons.zip"
 
 THEME_DIR="$HOME/.themes"
 ICON_DIR="$HOME/.local/share/icons"
 
 mkdir -p "$THEME_DIR" "$ICON_DIR"
 
-wget -q "$THEME_URL" -O /tmp/Nai-Icons.zip
-unzip -o /tmp/Nai-Icons.zip -d "$THEME_DIR"
+wget -q "$THEME_URL" -O /tmp/yan-Icons.zip
+unzip -o /tmp/yan-Icons.zip -d "$THEME_DIR"
 
-wget -q "$ICON_URL" -O /tmp/Nai-solid.zip
-unzip -o /tmp/Nai-solid.zip -d "$ICON_DIR"
+wget -q "$ICON_URL" -O /tmp/yan-solid.zip
+unzip -o /tmp/yan-solid.zip -d "$ICON_DIR"
 
 echo "[+] Theming..."
-THEME_NAME=$(basename "$(find "$THEME_DIR" -maxdepth 1 -type d -name "Nai*" | head -n 1)")
-ICON_NAME=$(basename "$(find "$ICON_DIR" -maxdepth 1 -type d -name "Nai*" | head -n 1)")
+THEME_NAME=$(basename "$(find "$THEME_DIR" -maxdepth 1 -type d -name "yan*" | head -n 1)")
+ICON_NAME=$(basename "$(find "$ICON_DIR" -maxdepth 1 -type d -name "yan*" | head -n 1)")
 
 if [ -n "$THEME_NAME" ]; then
 gsettings set org.gnome.desktop.interface gtk-theme "$THEME_NAME"
