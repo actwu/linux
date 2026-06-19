@@ -155,6 +155,10 @@ PS1="\[[34m\]\h - \[[0m\]"
 
 # Added by NaiOS installer: naios-shortcuts
 
+mm() {
+  flatpak run com.visualstudio.code -n --new-window "$@"
+}
+
 ,,() { source ~/.bashrc; }
 ..() { clear && ,,; }
 xx() { exit; }
