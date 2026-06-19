@@ -145,8 +145,8 @@ gsettings set org.gnome.desktop.wm.preferences button-layout "close,minimize,max
 echo "[+] Setting OS name to NaiOS..."
 sudo bash -c "sed -i '/^PRETTY_NAME=/d' /etc/os-release && echo 'PRETTY_NAME=\"$OS_NAME\"' >> /etc/os-release"
 
-# --- bsh function to safely add to bashrc ---
-bsh() {
+# --- wbsh function to safely add to bashrc ---
+wbsh() {
 local identifier="$1"   # Unique string to check in bashrc
 local content="$2"      # Multiline string to append
 
@@ -156,8 +156,9 @@ echo -e "$content" >> "$HOME/.bashrc"
 fi
 }
 
+
 # --- Add NaiOS logo on terminal start ---
-bsh "nai-on_start()" 'nai-on_start() {
+wbsh "nai-on_start()" 'nai-on_start() {
 echo -e "\e[1;34m
                     ▄▄                     
 ▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
@@ -171,9 +172,9 @@ echo -e "\e[1;34m
 }
 nai-on_start'
 
-bsh "naios-history-alias" 'alias hh="history | less"'
+wbsh "naios-history-alias" 'alias hh="history | less"'
 
-bsh "naios-info" '
+wbsh "naios-info" '
 naios_info() {
 echo ""
 echo -e "  \e[1;34mOS:\e[0m $(hostnamectl --static) OS"
@@ -187,9 +188,58 @@ echo ""
 
 alias "?"="naios_info"
 '
-bsh "naios-prompt" 'PS1="\[\e[34m\]\h - \[\e[0m\]"'
-bsh "naios-shortcuts" '
+wbsh "naios-prompt" 'PS1="\[\e[34m\]\h - \[\e[0m\]"'
+wbsh "naios-shortcuts" '
 ,,() { source ~/.bashrc; }
+..() { clear && ,,; }
+xx() { exit; }
+'
+# --- wzsh function to safely add to zshrc ---
+wzsh() {
+local identifier="$1"   # Unique string to check in zshrc
+local content="$2"      # Multiline string to append
+
+if ! grep -q "$identifier" "$HOME/.zshrc"; then
+echo -e "\n# Added by NaiOS installer: $identifier" >> "$HOME/.zshrc"
+echo -e "$content" >> "$HOME/.zshrc"
+fi
+}
+
+
+# --- Add NaiOS logo on terminal start ---
+wzsh "nai-on_start()" 'nai-on_start() {
+echo -e "\e[1;34m
+                    ▄▄                     
+▀███▄   ▀███▀         ██   ▄▄█▀▀██▄  ▄█▀▀▀█▄█
+███▄    █              ▄██▀    ▀██▄██    ▀█
+█ ███   █  ▄█▀██▄ ▀███ ██▀      ▀█████▄    
+█  ▀██▄ █ ██   ██   ██ ██        ██ ▀█████▄
+█   ▀██▄█  ▄█████   ██ ██▄      ▄██     ▀██
+█     ███ ██   ██   ██ ▀██▄    ▄██▀█     ██
+▄███▄    ██ ▀████▀██▄████▄ ▀▀████▀▀ █▀█████▀ 
+\e[0m"
+}
+nai-on_start'
+
+wzsh "naios-history-alias" 'alias hh="history | less"'
+
+wzsh "naios-info" '
+naios_info() {
+echo ""
+echo -e "  \e[1;34mOS:\e[0m $(hostnamectl --static) OS"
+echo -e "  \e[1;34mKernel:\e[0m $(uname -r)"
+echo -e "  \e[1;34mUptime:\e[0m $(uptime -p)"
+echo -e "  \e[1;34mCPU:\e[0m $(lscpu | grep "Model name" | awk -F: "{print \$2}" | xargs)"
+echo -e "  \e[1;34mMemory:\e[0m $(free -h | grep Mem | awk "{print \$3 \"/\" \$2}")"
+echo -e "  \e[1;34mDisk:\e[0m $(df -h / | tail -1 | awk "{print \$3 \"/\" \$2}")"
+echo ""
+}
+
+alias "?"="naios_info"
+'
+wzsh "naios-prompt" 'PS1="\[\e[34m\]\h - \[\e[0m\]"'
+wzsh "naios-shortcuts" '
+,,() { source ~/.zshrc; }
 ..() { clear && ,,; }
 xx() { exit; }
 '
