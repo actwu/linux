@@ -20,7 +20,7 @@ chmod +x install_gext.sh
 
 Make it NAI OS
 ```sh
-curl -O https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/naios.sh
+curl -O https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/os.sh
 chmod +x naios.sh
 ./naios.sh
 ```
