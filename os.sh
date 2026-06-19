@@ -154,8 +154,8 @@ curl -fL https://raw.githubusercontent.com/actwu/linux/refs/heads/WEBOPL/.zshrc 
 echo "[+] Theming..."
 rm -rf /tmp/yan-Icons /tmp/yan-solid /tmp/yan-Icons.zip /tmp/yan-solid.zip
 
-THEME_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/yan-solid.zip"
-ICON_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/yan-Icons.zip"
+THEME_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/nai-solid.zip"
+ICON_URL="https://github.com/actwu/linux/raw/refs/heads/WEBOPL/nai-Icons.zip"
 
 THEME_DIR="$HOME/.themes"
 ICON_DIR="$HOME/.local/share/icons"
